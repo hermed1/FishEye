@@ -154,7 +154,6 @@ main img {
   display: flex;
   justify-content: space-between;
   width: 250px;
-  border: red solid;
   position: relative;
 }
 
