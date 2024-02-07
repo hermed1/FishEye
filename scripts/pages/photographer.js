@@ -11,6 +11,7 @@ let photographer;
 let isSortedByPopularityAsc = true;
 let isSortedByDateAsc = true;
 let isSortedByTitleAsc = true;
+let isDropdownOpen = false;
 
 async function createMedias(photographer) {
   let mediasContainer = document.querySelector('.medias-container');
@@ -173,8 +174,14 @@ function toggleOptions() {
 
   // Ajoute un écouteur d'événement 'click' sur option1.
   option1.addEventListener('click', () => {
-    // Lorsque option1 est cliquée, appelle toggleSelectedOption avec option1 comme l'option sélectionnée.
-    toggleSelectedOption(option1, option2, option3);
+    if (!isDropdownOpen) {
+      option2.classList.remove('not-displayed-options');
+      option3.classList.remove('not-displayed-options');
+      isDropdownOpen = true;
+    } else {
+      // Lorsque option1 est cliquée, appelle toggleSelectedOption avec option1 comme l'option sélectionnée.
+      toggleSelectedOption(option1, option2, option3);
+    }
   });
 
   // Ajoute un écouteur d'événement 'click' sur option2, similaire à option1.
