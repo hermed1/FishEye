@@ -76,60 +76,46 @@ async function initPhotographerPage() {
   }
 }
 
-function displayArrows() {
-  if (isSortedByPopularityAsc) {
-    const buttonPopularity = document.querySelector('.option1');
-    const arrowDown = buttonPopularity.querySelector('.fa-chevron-down');
-    const arrowUp = buttonPopularity.querySelector('.fa-chevron-up');
-    arrowDown.style.display = 'none';
-    arrowUp.style.display = 'inline';
-  } else {
-    const buttonPopularity = document.querySelector('.option1');
-    const arrowDown = buttonPopularity.querySelector('.fa-chevron-down');
-    const arrowUp = buttonPopularity.querySelector('.fa-chevron-up');
-    arrowUp.style.display = 'none';
-    arrowDown.style.display = 'inline';
-  }
-  if (isSortedByDateAsc) {
-    const buttonDate = document.querySelector('.option2');
-    const arrowDown = buttonDate.querySelector('.fa-chevron-down');
-    const arrowUp = buttonDate.querySelector('.fa-chevron-up');
-    arrowDown.style.display = 'none';
-    arrowUp.style.display = 'inline';
-  } else {
-    const buttonDate = document.querySelector('.option2');
-    const arrowDown = buttonDate.querySelector('.fa-chevron-down');
-    const arrowUp = buttonDate.querySelector('.fa-chevron-up');
-    arrowUp.style.display = 'none';
-    arrowDown.style.display = 'inline';
-  }
-  if (isSortedByTitleAsc) {
-    const buttonTitle = document.querySelector('.option3');
-    const arrowDown = buttonTitle.querySelector('.fa-chevron-down');
-    const arrowUp = buttonTitle.querySelector('.fa-chevron-up');
-    arrowDown.style.display = 'none';
-    arrowUp.style.display = 'inline';
-  } else {
-    const buttonTitle = document.querySelector('.option3');
-    const arrowDown = buttonTitle.querySelector('.fa-chevron-down');
-    const arrowUp = buttonTitle.querySelector('.fa-chevron-up');
-    arrowUp.style.display = 'none';
-    arrowDown.style.display = 'inline';
-  }
-}
-//autre option pour displayArrows
-// function setArrowDisplay(optionSelector, isAsc) {
-//   const button = document.querySelector(optionSelector);
-//   const arrowDown = button.querySelector('.fa-chevron-down');
-//   const arrowUp = button.querySelector('.fa-chevron-up');
-//   arrowDown.style.display = isAsc ? 'none' : 'inline';
-//   arrowUp.style.display = isAsc ? 'inline' : 'none';
-// }
-
 // function displayArrows() {
-//   setArrowDisplay('.option1', isSortedByPopularityAsc);
-//   setArrowDisplay('.option2', isSortedByDateAsc);
-//   setArrowDisplay('.option3', isSortedByTitleAsc);
+//   if (isSortedByPopularityAsc) {
+//     const buttonPopularity = document.querySelector('.option1');
+//     const arrowDown = buttonPopularity.querySelector('.fa-chevron-down');
+//     const arrowUp = buttonPopularity.querySelector('.fa-chevron-up');
+//     arrowDown.style.display = 'none';
+//     arrowUp.style.display = 'inline';
+//   } else {
+//     const buttonPopularity = document.querySelector('.option1');
+//     const arrowDown = buttonPopularity.querySelector('.fa-chevron-down');
+//     const arrowUp = buttonPopularity.querySelector('.fa-chevron-up');
+//     arrowUp.style.display = 'none';
+//     arrowDown.style.display = 'inline';
+//   }
+//   if (isSortedByDateAsc) {
+//     const buttonDate = document.querySelector('.option2');
+//     const arrowDown = buttonDate.querySelector('.fa-chevron-down');
+//     const arrowUp = buttonDate.querySelector('.fa-chevron-up');
+//     arrowDown.style.display = 'none';
+//     arrowUp.style.display = 'inline';
+//   } else {
+//     const buttonDate = document.querySelector('.option2');
+//     const arrowDown = buttonDate.querySelector('.fa-chevron-down');
+//     const arrowUp = buttonDate.querySelector('.fa-chevron-up');
+//     arrowUp.style.display = 'none';
+//     arrowDown.style.display = 'inline';
+//   }
+//   if (isSortedByTitleAsc) {
+//     const buttonTitle = document.querySelector('.option3');
+//     const arrowDown = buttonTitle.querySelector('.fa-chevron-down');
+//     const arrowUp = buttonTitle.querySelector('.fa-chevron-up');
+//     arrowDown.style.display = 'none';
+//     arrowUp.style.display = 'inline';
+//   } else {
+//     const buttonTitle = document.querySelector('.option3');
+//     const arrowDown = buttonTitle.querySelector('.fa-chevron-down');
+//     const arrowUp = buttonTitle.querySelector('.fa-chevron-up');
+//     arrowUp.style.display = 'none';
+//     arrowDown.style.display = 'inline';
+//   }
 // }
 
 function toggleSortPopularity() {
@@ -139,7 +125,6 @@ function toggleSortPopularity() {
   console.log('Tri par popularité', displayedMedias);
   isSortedByPopularityAsc = !isSortedByPopularityAsc;
   createMedias(photographer);
-  displayArrows();
 }
 
 function toggleSortDate() {
@@ -151,7 +136,6 @@ function toggleSortDate() {
   console.log('Tri par date', displayedMedias);
   isSortedByDateAsc = !isSortedByDateAsc;
   createMedias(photographer);
-  displayArrows();
 }
 
 function toggleSortTitle() {
@@ -163,7 +147,6 @@ function toggleSortTitle() {
   console.log('Tri par titre', displayedMedias);
   isSortedByTitleAsc = !isSortedByTitleAsc;
   createMedias(photographer);
-  displayArrows();
 }
 
 function toggleOptions() {
@@ -177,6 +160,7 @@ function toggleOptions() {
     if (!isDropdownOpen) {
       option2.classList.remove('not-displayed-options');
       option3.classList.remove('not-displayed-options');
+      toggleDropdownArrows();
       isDropdownOpen = true;
     } else {
       // Lorsque option1 est cliquée, appelle toggleSelectedOption avec option1 comme l'option sélectionnée.
@@ -219,7 +203,6 @@ function toggleSelectedOption(selectedOption, otherOption1, otherOption2) {
   dropdown.insertBefore(selectedOption, dropdown.firstChild);
 }
 
-displayArrows();
 toggleOptions();
 initPhotographerPage();
 // Définit la fonction qui s'occupe de l'ajout des écouteurs d'événements sur les options.
@@ -235,5 +218,24 @@ document.addEventListener('click', (event) => {
         option.classList.add('not-displayed-options');
       }
     });
+    toggleDropdownArrows();
+    isDropdownOpen = false;
   }
 });
+
+function toggleDropdownArrows() {
+  const arrowUp = document.querySelector('.fa-chevron-up');
+  const arrowDown = document.querySelector('.fa-chevron-down');
+
+  if (!isDropdownOpen) {
+    arrowUp.classList.add('displayed-arrow');
+    arrowUp.classList.remove('not-displayed-arrow');
+    arrowDown.classList.add('not-displayed-arrow');
+    arrowDown.classList.remove('displayed-arrow');
+  } else {
+    arrowUp.classList.add('not-displayed-arrow');
+    arrowUp.classList.remove('displayed-arrow');
+    arrowDown.classList.add('displayed-arrow');
+    arrowDown.classList.remove('not-displayed-arrow');
+  }
+}

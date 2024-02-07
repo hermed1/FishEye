@@ -154,19 +154,28 @@ main img {
   display: flex;
   justify-content: space-between;
   width: 250px;
+  border: red solid;
+  position: relative;
+}
+
+.fa-solid {
+  position: absolute;
+  top: 23px;
+  right: 15px;
+  color: white;
 }
 
 .fa-chevron-up {
-  position: absolute;
-  top: 24px;
-  right: 3px;
+  display: none !important;
 }
-.fa-chevron-down {
-  position: absolute;
-  top: 25px;
-  right: 3px;
-  /* display: none !important; */
+
+.displayed-arrow {
+  display: inline !important;
 }
+.not-displayed-arrow {
+  display: none !important;
+}
+
 .dropdown-buttons {
   width: 150px;
   background-color: #901c1c;
@@ -176,12 +185,12 @@ main img {
 }
 .dropdown-buttons button {
   background-color: #901c1c;
-  width: 80%;
+  width: 150px;
   color: white;
-  padding: 15px 10px;
+  padding: 15px 10px 15px 15px;
   border: none;
-  position: relative;
   cursor: pointer;
+  text-align: start;
 }
 .not-displayed-options {
   display: none;
