@@ -182,16 +182,28 @@ main img {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 15px;
 }
+
 .dropdown-button {
   background-color: #901c1c;
   width: 150px;
   color: white;
   padding: 15px 10px 15px 15px;
   border: none;
+  /* border: 0.5px white solid; */
+  border-bottom: 0.5px white solid;
   cursor: pointer;
   text-align: start;
 }
+.dropdown-button1 {
+  border: none;
+}
+
+.last-dropdown-button {
+  border-bottom: none;
+}
+
 /* .not-displayed-options {
   display: none;
 } */

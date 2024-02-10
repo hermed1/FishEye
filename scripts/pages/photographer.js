@@ -40,6 +40,51 @@ const buttonsList = [
 //   }
 // }
 
+// function generateDropdownButtons() {
+//   const dropdownButtons = document.querySelector('.dropdown-buttons');
+//   // Vider le conteneur avant d'ajouter de nouveaux boutons
+//   dropdownButtons.innerHTML = '';
+
+//   if (!isDropdownOpen) {
+//     // Affiche uniquement le premier bouton si le menu est fermé
+//     const element = buttonsList[0];
+//     const button = document.createElement('button');
+//     button.textContent = element.label;
+//     button.classList.add('dropdown-button', 'dropdown-button1');
+//     dropdownButtons.appendChild(button);
+//     button.addEventListener('click', (event) => {
+//       event.stopPropagation(); // Empêche l'événement de clic de se propager
+//       // Ouvre le menu et regénère les boutons
+//       isDropdownOpen = true;
+//       generateDropdownButtons();
+//       toggleDropdownArrows();
+//     });
+//   } else {
+//     // Affiche tous les boutons si le menu est ouvert
+
+//     for (let element of buttonsList) {
+//       const dropdownButton = document.createElement('button');
+//       dropdownButton.textContent = element.label;
+//       dropdownButton.classList.add('dropdown-button');
+//       dropdownButtons.appendChild(dropdownButton);
+//       dropdownButton.addEventListener('click', () => {
+//         element.sortingFunction();
+//         // Déplace l'élément cliqué en première position du tableau
+//         //avec unshift j'insère l'élément cliqué à [0]
+//         buttonsList.unshift(
+//           //mais je veux supprimer l'élément cliqué pour pas qu'il soit en double = splice(index de début, 1 élément à supprimer)
+//           //je récupère l'élément supprimé avec [0] pour pouvoir l'insérer avec unshift
+//           buttonsList.splice(buttonsList.indexOf(element), 1)[0]
+//         );
+//         isDropdownOpen = false; // Ferme le menu après sélection
+//         generateDropdownButtons();
+//         toggleDropdownArrows();
+//       });
+//     }
+//     toggleDropdownArrows();
+//   }
+// }
+
 function generateDropdownButtons() {
   const dropdownButtons = document.querySelector('.dropdown-buttons');
   // Vider le conteneur avant d'ajouter de nouveaux boutons
@@ -50,7 +95,7 @@ function generateDropdownButtons() {
     const element = buttonsList[0];
     const button = document.createElement('button');
     button.textContent = element.label;
-    button.classList.add('dropdown-button');
+    button.classList.add('dropdown-button', 'dropdown-button1'); // Classe spécifique pour le premier bouton
     dropdownButtons.appendChild(button);
     button.addEventListener('click', (event) => {
       event.stopPropagation(); // Empêche l'événement de clic de se propager
@@ -61,26 +106,27 @@ function generateDropdownButtons() {
     });
   } else {
     // Affiche tous les boutons si le menu est ouvert
-
-    for (let element of buttonsList) {
+    buttonsList.forEach((element, index) => {
       const dropdownButton = document.createElement('button');
       dropdownButton.textContent = element.label;
       dropdownButton.classList.add('dropdown-button');
+      // Si c'est le dernier élément du tableau, ajoute une classe spécifique
+      if (index === buttonsList.length - 1) {
+        dropdownButton.classList.add('last-dropdown-button');
+      }
       dropdownButtons.appendChild(dropdownButton);
+
       dropdownButton.addEventListener('click', () => {
         element.sortingFunction();
         // Déplace l'élément cliqué en première position du tableau
-        //avec unshift j'insère l'élément cliqué à [0]
         buttonsList.unshift(
-          //mais je veux supprimer l'élément cliqué pour pas qu'il soit en double = splice(index de début, 1 élément à supprimer)
-          //je récupère l'élément supprimé avec [0] pour pouvoir l'insérer avec unshift
           buttonsList.splice(buttonsList.indexOf(element), 1)[0]
         );
         isDropdownOpen = false; // Ferme le menu après sélection
         generateDropdownButtons();
         toggleDropdownArrows();
       });
-    }
+    });
     toggleDropdownArrows();
   }
 }
