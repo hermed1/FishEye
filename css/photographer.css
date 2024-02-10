@@ -136,7 +136,7 @@ main img {
   color: #901c1c;
   font-weight: 700;
 }
-.price-tag {
+.price-and-total-likes {
   background-color: #d3573c;
   font-weight: bolder;
   width: 200px;
@@ -147,6 +147,11 @@ main img {
   padding: 15px 20px;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.price-tag-heart {
+  margin-left: 5px;
 }
 
 .dropdown {

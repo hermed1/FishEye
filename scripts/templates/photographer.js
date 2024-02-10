@@ -35,7 +35,7 @@ export function photographerTemplate(
       const priceP = document.createElement('p');
       priceP.textContent = price ? `${price}€ par jour` : 'prix non spécifié';
       priceP.classList.add('photographer__price');
-      const cardLink = document.createElement('a');
+      // const cardLink = document.createElement('a');
       const infosContainer = document.createElement('div');
       infosContainer.classList.add('infos-container');
       locationContainer.appendChild(cityP);

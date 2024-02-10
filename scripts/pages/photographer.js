@@ -8,9 +8,6 @@ const id = params.get('id');
 
 let displayedMedias;
 let photographer;
-// let isSortedByPopularityAsc = true;
-// let isSortedByDateAsc = true;
-// let isSortedByTitleAsc = true;
 let isDropdownOpen = false;
 
 const buttonsList = [
@@ -18,72 +15,6 @@ const buttonsList = [
   { id: 2, label: 'Titre', sortingFunction: sortByTitle },
   { id: 3, label: 'Date', sortingFunction: sortByDate },
 ];
-
-// function generateDropdownButtons() {
-//   const dropdownButtons = document.querySelector('.dropdown-buttons');
-
-//   if (!isDropdownOpen) {
-//     const element = buttonsList[0];
-//     const button = document.createElement('button');
-//     button.textContent = element.label;
-//     button.classList.add('dropdown-button');
-//     dropdownButtons.appendChild(button);
-//   }
-//   for (let element of buttonsList) {
-//     const button = document.createElement('button');
-//     button.textContent = element.label;
-//     button.classList.add('dropdown-button');
-//     dropdownButtons.appendChild(button);
-//     button.addEventListener('click', () => {
-//       element.sortingFunction();
-//     });
-//   }
-// }
-
-// function generateDropdownButtons() {
-//   const dropdownButtons = document.querySelector('.dropdown-buttons');
-//   // Vider le conteneur avant d'ajouter de nouveaux boutons
-//   dropdownButtons.innerHTML = '';
-
-//   if (!isDropdownOpen) {
-//     // Affiche uniquement le premier bouton si le menu est fermé
-//     const element = buttonsList[0];
-//     const button = document.createElement('button');
-//     button.textContent = element.label;
-//     button.classList.add('dropdown-button', 'dropdown-button1');
-//     dropdownButtons.appendChild(button);
-//     button.addEventListener('click', (event) => {
-//       event.stopPropagation(); // Empêche l'événement de clic de se propager
-//       // Ouvre le menu et regénère les boutons
-//       isDropdownOpen = true;
-//       generateDropdownButtons();
-//       toggleDropdownArrows();
-//     });
-//   } else {
-//     // Affiche tous les boutons si le menu est ouvert
-
-//     for (let element of buttonsList) {
-//       const dropdownButton = document.createElement('button');
-//       dropdownButton.textContent = element.label;
-//       dropdownButton.classList.add('dropdown-button');
-//       dropdownButtons.appendChild(dropdownButton);
-//       dropdownButton.addEventListener('click', () => {
-//         element.sortingFunction();
-//         // Déplace l'élément cliqué en première position du tableau
-//         //avec unshift j'insère l'élément cliqué à [0]
-//         buttonsList.unshift(
-//           //mais je veux supprimer l'élément cliqué pour pas qu'il soit en double = splice(index de début, 1 élément à supprimer)
-//           //je récupère l'élément supprimé avec [0] pour pouvoir l'insérer avec unshift
-//           buttonsList.splice(buttonsList.indexOf(element), 1)[0]
-//         );
-//         isDropdownOpen = false; // Ferme le menu après sélection
-//         generateDropdownButtons();
-//         toggleDropdownArrows();
-//       });
-//     }
-//     toggleDropdownArrows();
-//   }
-// }
 
 function generateDropdownButtons() {
   const dropdownButtons = document.querySelector('.dropdown-buttons');
@@ -164,7 +95,8 @@ async function createMedias(photographer) {
 async function getPhotographer() {
   try {
     const datas = await getPhotographers();
-    photographer = datas.photographers.filter(
+    console.log('datas', datas);
+    photographer = datas.photographers?.filter(
       (photographer) => photographer.id === parseInt(id)
     )[0];
     const photographerMedias = datas.media.filter(
@@ -196,13 +128,55 @@ async function initPhotographerPage() {
     createMedias(photographer);
   }
 
+  // if (photographer?.price) {
+  //   let totalLikes = 0;
+  //   if (displayedMedias) {
+  //     for (let oneMedia of displayedMedias) {
+  //       totalLikes += oneMedia.likes;
+  //     }
+  //   }
+  //   const likesNumber = document.createElement('p');
+  //   const heart = document.createElement('i');
+  //   heart.classList.add('fa-solid');
+  //   heart.classList.add('fa-heart');
+  //   likesNumber.textContent = totalLikes + heart;
+  //   const priceAndTotalLikes = document.createElement('div');
+  //   const price = document.createElement('p');
+  //   price.textContent = `${photographer.price}€ / jour`;
+  //   priceAndTotalLikes.classList.add('price-and-total-likes');
+  //   priceAndTotalLikes.appendChild(likesNumber);
+  //   priceAndTotalLikes.appendChild(price);
+  //   const body = document.getElementsByTagName('body');
+  //   body[0].appendChild(priceAndTotalLikes);
+  // }
+
   if (photographer?.price) {
-    const priceTag = document.createElement('p');
-    priceTag.textContent = `${photographer.price}€ / jour`;
-    priceTag.classList.add('price-tag');
-    const body = document.getElementsByTagName('body');
-    body[0].appendChild(priceTag);
+    let totalLikes = 0;
+    if (displayedMedias) {
+      for (let oneMedia of displayedMedias) {
+        totalLikes += oneMedia.likes;
+      }
+    }
+    const likesContainer = document.createElement('p');
+    const heart = document.createElement('i');
+    heart.classList.add('fa-solid');
+    heart.classList.add('fa-heart');
+    heart.classList.add('price-tag-heart');
+    const likesNumber = document.createElement('span');
+    likesNumber.textContent = totalLikes;
+    likesNumber.classList.add('number-of-likes');
+    likesNumber.appendChild(heart);
+    likesContainer.appendChild(likesNumber);
+    const priceAndTotalLikes = document.createElement('div');
+    const price = document.createElement('p');
+    price.textContent = `${photographer.price}€ / jour`;
+    priceAndTotalLikes.classList.add('price-and-total-likes');
+    priceAndTotalLikes.appendChild(likesNumber);
+    priceAndTotalLikes.appendChild(price);
+    const body = document.getElementsByTagName('body')[0];
+    body.appendChild(priceAndTotalLikes);
   }
+
   generateDropdownButtons();
 }
 
@@ -224,61 +198,6 @@ function sortByTitle() {
   createMedias(photographer);
 }
 
-// function toggleOptions() {
-//   // Sélectionne les éléments HTML qui représentent les options de tri.
-//   const option1 = document.querySelector('.option1');
-//   const option2 = document.querySelector('.option2');
-//   const option3 = document.querySelector('.option3');
-
-//   // Ajoute un écouteur d'événement 'click' sur option1.
-//   option1.addEventListener('click', () => {
-//     if (!isDropdownOpen) {
-//       option2.classList.remove('not-displayed-options');
-//       option3.classList.remove('not-displayed-options');
-//       toggleDropdownArrows();
-//       isDropdownOpen = true;
-//     } else {
-//       // Lorsque option1 est cliquée, appelle toggleSelectedOption avec option1 comme l'option sélectionnée.
-//       toggleSelectedOption(option1, option2, option3);
-//     }
-//   });
-
-//   // Ajoute un écouteur d'événement 'click' sur option2, similaire à option1.
-//   option2.addEventListener('click', () => {
-//     toggleSelectedOption(option2, option1, option3);
-//   });
-
-//   // Ajoute un écouteur d'événement 'click' sur option3, similaire à option1 et option2.
-//   option3.addEventListener('click', () => {
-//     toggleSelectedOption(option3, option1, option2);
-//   });
-// }
-
-// // Définit la fonction qui gère le changement d'option sélectionnée.
-// function toggleSelectedOption(selectedOption, otherOption1, otherOption2) {
-//   // Vérifie le contenu textuel de l'option sélectionnée pour déterminer quelle fonction de tri appeler.
-//   if (selectedOption.textContent.includes('Popularité')) {
-//     // Si le texte inclut 'Popularité', appelle la fonction de tri par popularité.
-//     sortByPopularity();
-//   } else if (selectedOption.textContent.includes('Date')) {
-//     // Si le texte inclut 'Date', appelle la fonction de tri par date.
-//     sortByDate();
-//   } else if (selectedOption.textContent.includes('Titre')) {
-//     // Si le texte inclut 'Titre', appelle la fonction de tri par titre.
-//     sortByTitle();
-//   }
-
-//   // Affiche toutes les options en retirant la classe 'not-displayed-options' qui pourrait les cacher.
-//   selectedOption.classList.remove('not-displayed-options');
-//   otherOption1.classList.remove('not-displayed-options');
-//   otherOption2.classList.remove('not-displayed-options');
-
-//   // Réorganise les options en déplaçant l'option sélectionnée en première position dans le conteneur '.dropdown-buttons'.
-//   const dropdown = document.querySelector('.dropdown-buttons');
-//   dropdown.insertBefore(selectedOption, dropdown.firstChild);
-// }
-
-// toggleOptions();
 initPhotographerPage();
 
 function toggleDropdownArrows() {
