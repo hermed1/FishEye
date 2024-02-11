@@ -68,7 +68,6 @@ document.addEventListener('click', (event) => {
   if (!isDropdownClicked) {
     generateDropdownButtons();
     toggleDropdownArrows();
-    console.log('test');
     isDropdownOpen = false;
   }
 });
@@ -95,7 +94,7 @@ async function createMedias(photographer) {
 async function getPhotographer() {
   try {
     const datas = await getPhotographers();
-    console.log('datas', datas);
+    console.log('test', datas);
     photographer = datas.photographers?.filter(
       (photographer) => photographer.id === parseInt(id)
     )[0];
@@ -103,6 +102,8 @@ async function getPhotographer() {
       (oneMedia) => oneMedia.photographerId == id
     );
     displayedMedias = photographerMedias;
+    console.log('test2', photographer);
+
     return photographer;
   } catch (error) {
     console.error('Erreur lors de la récupération des photographes:', error);
@@ -182,19 +183,16 @@ async function initPhotographerPage() {
 
 function sortByPopularity() {
   displayedMedias.sort((a, b) => b.likes - a.likes);
-  console.log('Tri par popularité', displayedMedias);
   createMedias(photographer);
 }
 
 function sortByDate() {
   displayedMedias.sort((a, b) => new Date(a.date) - new Date(b.date));
-  console.log('Tri par date', displayedMedias);
   createMedias(photographer);
 }
 
 function sortByTitle() {
   displayedMedias.sort((a, b) => a.title.localeCompare(b.title));
-  console.log('Tri par titre', displayedMedias);
   createMedias(photographer);
 }
 
@@ -215,4 +213,40 @@ function toggleDropdownArrows() {
     arrowDown.classList.add('not-displayed-arrow');
     arrowDown.classList.remove('displayed-arrow');
   }
+}
+
+function displayModal() {
+  const contactModal = document.querySelector('#contact_modal');
+  contactModal.style.display = 'block';
+}
+
+function closeModal() {
+  const contactModal = document.querySelector('#contact_modal');
+  contactModal.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sendButton = document.querySelector('.send_button');
+  if (sendButton) {
+    sendButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      getFormValues();
+    });
+  }
+});
+
+function getFormValues() {
+  const firstName = document.getElementById('firstName').value;
+  const lastName = document.getElementById('lastName').value;
+  const email = document.getElementById('email').value;
+  const textarea = document.getElementById('form-textarea').value;
+  const formDetails = {
+    prénom: firstName,
+    nom: lastName,
+    email: email,
+    message: textarea,
+  };
+
+  closeModal();
+  console.log('form', formDetails);
 }

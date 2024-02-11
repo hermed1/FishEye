@@ -31,14 +31,10 @@
         <i class="fa-solid fa-chevron-up fa-lg not-displayed-arrow"></i>
         <i class="fa-solid fa-chevron-down fa-lg"></i>
 
-        <div class="dropdown-buttons">
-          <!-- <button class="option1">Popularité</button>
-          <button class="option2 not-displayed-options">Date</button>
-          <button class="option3 not-displayed-options">Titre</button> -->
-        </div>
+        <div class="dropdown-buttons"></div>
       </div>
     </main>
-    <div id="contact_modal">
+    <div id="contact_modal" role="dialog">
       <div class="modal">
         <header>
           <h2>Contactez-moi</h2>
@@ -47,9 +43,22 @@
         <form>
           <div>
             <label>Prénom</label>
-            <input />
+            <input type="text" id="firstName" />
           </div>
-          <button class="contact_button">Envoyer</button>
+          <div>
+            <label>Nom</label>
+            <input type="text" id="lastName" />
+          </div>
+          <div>
+            <label>Email</label>
+            <input type="email" id="email" />
+          </div>
+          <div>
+            <label>Votre message</label>
+            <textarea name="" id="form-textarea" cols="30" rows="10"></textarea>
+          </div>
+
+          <button class="contact_button send_button">Envoyer</button>
         </form>
       </div>
     </div>

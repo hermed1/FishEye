@@ -1,7 +1,13 @@
 #contact_modal {
   display: none;
+  position: absolute;
+  top: 50px;
+  width: 100%;
 }
-
+#form-textarea {
+  width: 100%;
+  resize: none;
+}
 .photograph-header {
   background-color: #fafafa;
   height: 300px;
