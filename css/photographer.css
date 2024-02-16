@@ -154,6 +154,7 @@ main img {
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
 }
 .price-tag-heart {
@@ -238,4 +239,8 @@ main img {
 .heart-and-number p {
   font-weight: bold;
   margin-right: 5px;
+}
+
+.media-heart {
+  cursor: pointer;
 }

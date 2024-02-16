@@ -9,6 +9,7 @@ const id = params.get('id');
 let displayedMedias;
 let photographer;
 let isDropdownOpen = false;
+let totalLikes = 0;
 
 const buttonsList = [
   { id: 1, label: 'Popularité', sortingFunction: sortByPopularity },
@@ -94,7 +95,6 @@ async function createMedias(photographer) {
 async function getPhotographer() {
   try {
     const datas = await getPhotographers();
-    console.log('test', datas);
     photographer = datas.photographers?.filter(
       (photographer) => photographer.id === parseInt(id)
     )[0];
@@ -102,7 +102,6 @@ async function getPhotographer() {
       (oneMedia) => oneMedia.photographerId == id
     );
     displayedMedias = photographerMedias;
-    console.log('test2', photographer);
 
     return photographer;
   } catch (error) {
@@ -112,12 +111,30 @@ async function getPhotographer() {
 
 async function initPhotographerPage() {
   photographer = await getPhotographer();
+
+  if (displayedMedias) {
+    for (let oneMedia of displayedMedias) {
+      totalLikes += oneMedia.likes;
+    }
+  }
+
   if (photographer) {
     const photographerModelSinglePage = photographerTemplate(
       photographer,
       true,
-      'h1'
+      'h1',
+      totalLikes
     );
+    if (photographer?.price) {
+      const priceAndTotalLikes = document.createElement('div');
+      const price = document.createElement('p');
+      price.textContent = `${photographer.price}€ / jour`;
+      priceAndTotalLikes.classList.add('price-and-total-likes');
+      priceAndTotalLikes.appendChild(price);
+      const body = document.getElementsByTagName('body')[0];
+      body.appendChild(priceAndTotalLikes);
+    }
+
     const photographerCardDom = photographerModelSinglePage.getUserCardDOM();
     const photographerHeader = document.querySelector('.photograph-header');
     photographerHeader.appendChild(photographerCardDom);
@@ -129,13 +146,6 @@ async function initPhotographerPage() {
     createMedias(photographer);
   }
 
-  // if (photographer?.price) {
-  //   let totalLikes = 0;
-  //   if (displayedMedias) {
-  //     for (let oneMedia of displayedMedias) {
-  //       totalLikes += oneMedia.likes;
-  //     }
-  //   }
   //   const likesNumber = document.createElement('p');
   //   const heart = document.createElement('i');
   //   heart.classList.add('fa-solid');
@@ -151,32 +161,13 @@ async function initPhotographerPage() {
   //   body[0].appendChild(priceAndTotalLikes);
   // }
 
-  if (photographer?.price) {
-    let totalLikes = 0;
-    if (displayedMedias) {
-      for (let oneMedia of displayedMedias) {
-        totalLikes += oneMedia.likes;
-      }
-    }
-    const likesContainer = document.createElement('p');
-    const heart = document.createElement('i');
-    heart.classList.add('fa-solid');
-    heart.classList.add('fa-heart');
-    heart.classList.add('price-tag-heart');
-    const likesNumber = document.createElement('span');
-    likesNumber.textContent = totalLikes;
-    likesNumber.classList.add('number-of-likes');
-    likesNumber.appendChild(heart);
-    likesContainer.appendChild(likesNumber);
-    const priceAndTotalLikes = document.createElement('div');
-    const price = document.createElement('p');
-    price.textContent = `${photographer.price}€ / jour`;
-    priceAndTotalLikes.classList.add('price-and-total-likes');
-    priceAndTotalLikes.appendChild(likesNumber);
-    priceAndTotalLikes.appendChild(price);
-    const body = document.getElementsByTagName('body')[0];
-    body.appendChild(priceAndTotalLikes);
-  }
+  // if (photographer?.price) {
+  //   let totalLikes = 0;
+  //   if (displayedMedias) {
+  //     for (let oneMedia of displayedMedias) {
+  //       totalLikes += oneMedia.likes;
+  //     }
+  //   }
 
   generateDropdownButtons();
 }
@@ -249,4 +240,67 @@ function getFormValues() {
 
   closeModal();
   console.log('form', formDetails);
+}
+
+// function handleLikes() {
+//   const heartList = document.querySelectorAll('.media-heart');
+//   heartList.forEach((heart) => {
+//     heart.classList.remove('fa-regular');
+//     heart.classList.add('fa-solid');
+//   });
+// }
+
+function handleClickLike() {
+  const heartList = document.querySelectorAll('.media-heart');
+  heartList.forEach((heart) => {
+    heart.addEventListener('click', () => {
+      if (heart.classList.contains('fa-regular')) {
+        heart.classList.remove('fa-regular');
+        heart.classList.add('fa-solid');
+        console.log('test1');
+      } else {
+        heart.classList.add('fa-regular');
+        heart.classList.remove('fa-solid');
+        console.log('test2');
+      }
+    });
+  });
+}
+//via délégation d'events/bouillonnement
+document.body.addEventListener('click', (event) => {
+  if (event.target.classList.contains('media-heart')) {
+    if (event.target.classList.contains('fa-regular')) {
+      event.target.classList.remove('fa-regular');
+      event.target.classList.add('fa-solid');
+      console.log('test1, je like', event.target);
+      totalLikes += 1;
+      document.querySelector('.number-of-likes').textContent = totalLikes;
+      changeMediaNumberOfLikes(true, event.target);
+    } else {
+      event.target.classList.add('fa-regular');
+      event.target.classList.remove('fa-solid');
+      console.log('test2');
+      totalLikes -= 1;
+      document.querySelector('.number-of-likes').textContent = totalLikes;
+      changeMediaNumberOfLikes(false, event.target);
+    }
+  }
+});
+
+function changeMediaNumberOfLikes(isMore = true, target) {
+  if (isMore) {
+    let heart = target;
+    console.log('fonction', heart);
+    let number = heart.previousElementSibling;
+    let numberOfLikes = parseInt(number.textContent);
+    numberOfLikes += 1;
+    number.textContent = numberOfLikes;
+  } else {
+    let heart = target;
+    let number = heart.previousElementSibling;
+    console.log('element', number);
+    let numberOfLikes = parseInt(number.textContent);
+    numberOfLikes -= 1;
+    number.textContent = numberOfLikes;
+  }
 }

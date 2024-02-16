@@ -14,9 +14,11 @@ export function mediaTemplate(media, name) {
 
     const mediaLikes = document.createElement('p');
     mediaLikes.textContent = likes ?? '';
+    mediaLikes.classList.add('media-likes-number');
     const mediaHeart = document.createElement('i');
-    mediaHeart.classList.add('fa-solid');
+    mediaHeart.classList.add('fa-regular');
     mediaHeart.classList.add('fa-heart');
+    mediaHeart.classList.add('media-heart');
     const heartAndNumber = document.createElement('div');
     heartAndNumber.classList.add('heart-and-number');
     heartAndNumber.appendChild(mediaLikes);

@@ -1,7 +1,8 @@
 export function photographerTemplate(
   data,
   isProfilePage = false,
-  titleTag = 'h2'
+  titleTag = 'h2',
+  totalLikes
 ) {
   const { name, portrait, tagline, id, city, country, price } = data;
 
@@ -38,6 +39,25 @@ export function photographerTemplate(
       // const cardLink = document.createElement('a');
       const infosContainer = document.createElement('div');
       infosContainer.classList.add('infos-container');
+      //gestion du total des likes
+      const likesContainer = document.createElement('p');
+      const heart = document.createElement('i');
+      heart.classList.add('fa-solid');
+      heart.classList.add('fa-heart');
+      heart.classList.add('price-tag-heart');
+      const likesNumber = document.createElement('span');
+      const likesAndHeart = document.createElement('p');
+      const priceAndTotalLikes = document.querySelector(
+        '.price-and-total-likes'
+      );
+      likesNumber.textContent = totalLikes ?? '';
+      likesNumber.classList.add('number-of-likes');
+      // likesNumber.appendChild(heart);
+      likesAndHeart.appendChild(likesNumber);
+      likesAndHeart.appendChild(heart);
+
+      likesContainer.appendChild(likesAndHeart);
+      priceAndTotalLikes.appendChild(likesContainer);
       locationContainer.appendChild(cityP);
       locationContainer.appendChild(countryP);
       infosContainer.appendChild(titleTagElement);
