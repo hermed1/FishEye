@@ -1,4 +1,9 @@
-export function mediaTemplate(media, name) {
+export function mediaTemplate(
+  media,
+  name,
+  updateTotalLikes,
+  changeMediaNumberOfLikes
+) {
   const { title, likes, image, video } = media;
 
   let photographerFirstName = name.split(' ')[0];
@@ -19,6 +24,19 @@ export function mediaTemplate(media, name) {
     mediaHeart.classList.add('fa-regular');
     mediaHeart.classList.add('fa-heart');
     mediaHeart.classList.add('media-heart');
+    mediaHeart.addEventListener('click', (event) => {
+      if (event.target.classList.contains('fa-regular')) {
+        event.target.classList.remove('fa-regular');
+        event.target.classList.add('fa-solid');
+        changeMediaNumberOfLikes(true, event.target);
+        updateTotalLikes();
+      } else {
+        event.target.classList.add('fa-regular');
+        event.target.classList.remove('fa-solid');
+        changeMediaNumberOfLikes(false, event.target);
+        updateTotalLikes(false);
+      }
+    });
     const heartAndNumber = document.createElement('div');
     heartAndNumber.classList.add('heart-and-number');
     heartAndNumber.appendChild(mediaLikes);

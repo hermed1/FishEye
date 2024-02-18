@@ -86,7 +86,12 @@ async function createMedias(photographer) {
   const photographerName = photographer.name;
 
   for (let oneMedia of displayedMedias) {
-    const mediaModel = mediaTemplate(oneMedia, photographerName);
+    const mediaModel = mediaTemplate(
+      oneMedia,
+      photographerName,
+      updateTotalLikes,
+      changeMediaNumberOfLikes
+    );
     const mediaCard = mediaModel.createMedia();
     mediasContainer.appendChild(mediaCard);
   }
@@ -267,25 +272,6 @@ function getFormValues() {
 //   });
 // }
 //via délégation d'events/bouillonnement
-document.body.addEventListener('click', (event) => {
-  if (event.target.classList.contains('media-heart')) {
-    if (event.target.classList.contains('fa-regular')) {
-      event.target.classList.remove('fa-regular');
-      event.target.classList.add('fa-solid');
-      console.log('test1, je like', event.target);
-      totalLikes += 1;
-      document.querySelector('.number-of-likes').textContent = totalLikes;
-      changeMediaNumberOfLikes(true, event.target);
-    } else {
-      event.target.classList.add('fa-regular');
-      event.target.classList.remove('fa-solid');
-      console.log('test2');
-      totalLikes -= 1;
-      document.querySelector('.number-of-likes').textContent = totalLikes;
-      changeMediaNumberOfLikes(false, event.target);
-    }
-  }
-});
 
 function changeMediaNumberOfLikes(isMore = true, target) {
   if (isMore) {
@@ -302,5 +288,20 @@ function changeMediaNumberOfLikes(isMore = true, target) {
     let numberOfLikes = parseInt(number.textContent);
     numberOfLikes -= 1;
     number.textContent = numberOfLikes;
+  }
+}
+
+function updateTotalLikes(isMore = true) {
+  let totalLikesElement = document.querySelector('.number-of-likes');
+  if (totalLikesElement) {
+    if (isMore) {
+      totalLikes += 1;
+    } else {
+      totalLikes -= 1;
+    }
+    totalLikesElement.textContent = totalLikes;
+  } else {
+    // Gestion de l'erreur ou tentative de récupération de l'élément à nouveau
+    console.error("L'élément .number-of-likes n'a pas été trouvé dans le DOM.");
   }
 }
