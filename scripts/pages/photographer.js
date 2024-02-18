@@ -250,22 +250,22 @@ function getFormValues() {
 //   });
 // }
 
-function handleClickLike() {
-  const heartList = document.querySelectorAll('.media-heart');
-  heartList.forEach((heart) => {
-    heart.addEventListener('click', () => {
-      if (heart.classList.contains('fa-regular')) {
-        heart.classList.remove('fa-regular');
-        heart.classList.add('fa-solid');
-        console.log('test1');
-      } else {
-        heart.classList.add('fa-regular');
-        heart.classList.remove('fa-solid');
-        console.log('test2');
-      }
-    });
-  });
-}
+// function handleClickLike() {
+//   const heartList = document.querySelectorAll('.media-heart');
+//   heartList.forEach((heart) => {
+//     heart.addEventListener('click', () => {
+//       if (heart.classList.contains('fa-regular')) {
+//         heart.classList.remove('fa-regular');
+//         heart.classList.add('fa-solid');
+//         console.log('test1');
+//       } else {
+//         heart.classList.add('fa-regular');
+//         heart.classList.remove('fa-solid');
+//         console.log('test2');
+//       }
+//     });
+//   });
+// }
 //via délégation d'events/bouillonnement
 document.body.addEventListener('click', (event) => {
   if (event.target.classList.contains('media-heart')) {
