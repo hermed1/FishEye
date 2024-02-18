@@ -276,7 +276,6 @@ function getFormValues() {
 function changeMediaNumberOfLikes(isMore = true, target) {
   if (isMore) {
     let heart = target;
-    console.log('fonction', heart);
     let number = heart.previousElementSibling;
     let numberOfLikes = parseInt(number.textContent);
     numberOfLikes += 1;
@@ -284,7 +283,6 @@ function changeMediaNumberOfLikes(isMore = true, target) {
   } else {
     let heart = target;
     let number = heart.previousElementSibling;
-    console.log('element', number);
     let numberOfLikes = parseInt(number.textContent);
     numberOfLikes -= 1;
     number.textContent = numberOfLikes;
