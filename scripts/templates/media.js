@@ -2,9 +2,11 @@ export function mediaTemplate(
   media,
   name,
   updateTotalLikes,
-  changeMediaNumberOfLikes
+  changeMediaNumberOfLikes,
+  openLightbox
 ) {
   const { title, likes, image, video } = media;
+  console.log(image);
 
   let photographerFirstName = name.split(' ')[0];
 
@@ -49,23 +51,37 @@ export function mediaTemplate(
 
     const mediaContainer = document.createElement('div');
     mediaContainer.classList.add('media-container');
+    let mediaPath = '';
+    //listener pour lightbox
 
     if (video) {
-      const mediaPath = `./FishEye_Photos/Sample_Photos/${photographerFirstName}/${video}`;
+      mediaPath = `./FishEye_Photos/Sample_Photos/${photographerFirstName}/${video}`;
       const mediaVideo = document.createElement('video');
       mediaVideo.setAttribute('src', mediaPath);
       mediaVideo.setAttribute('alt', title);
-      mediaVideo.setAttribute('controls', 'controls');
+      // mediaVideo.setAttribute('controls', 'controls');
+      mediaVideo.addEventListener('click', (e) => {
+        openLightbox(mediaPath, title ?? 'titre inconnu');
+        console.log(e);
+      });
       mediaContainer.appendChild(mediaVideo);
     } else {
-      const mediaPath = `./FishEye_Photos/Sample_Photos/${photographerFirstName}/${image}`;
+      mediaPath = `./FishEye_Photos/Sample_Photos/${photographerFirstName}/${image}`;
       const mediaImage = document.createElement('img');
       mediaImage.setAttribute('src', mediaPath);
       mediaImage.setAttribute('alt', title);
+      mediaImage.addEventListener('click', (e) => {
+        openLightbox(mediaPath, title ?? 'titre inconnu');
+        console.log(e);
+      });
       mediaContainer.appendChild(mediaImage);
     }
 
     mediaContainer.appendChild(nameAndLikesContainer);
+    mediaContainer.setAttribute('mediaIndex', 1);
+    // mediaContainer.addEventListener('click', () => {
+    //   openLightbox(mediaPath, title ?? 'titre inconnu');
+    // });
     return mediaContainer;
   }
   return {

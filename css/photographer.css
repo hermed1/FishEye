@@ -115,12 +115,14 @@ main img {
 
 .media-container {
   width: 26%;
+  cursor: pointer;
+  margin-bottom: 30px;
 }
 
 .medias-container {
   display: flex;
-  flex-wrap: wrap; /* Permet aux éléments de passer à la ligne suivante */
-  justify-content: space-between; /* Ajoute de l'espace entre les éléments */
+  flex-wrap: wrap;
+  justify-content: space-between;
   margin: 0 100px;
 }
 
@@ -243,4 +245,51 @@ main img {
 
 .media-heart {
   cursor: pointer;
+}
+
+.lightbox-img {
+  width: 300px;
+  height: 200px;
+}
+
+/* lightbox */
+
+#lightbox_modal {
+  display: none;
+}
+
+.lightbox-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 5vw 10% 0 10%;
+  position: relative;
+}
+.lightbox-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.lightbox-media-container {
+  width: 50vw;
+  height: 40vw;
+  margin: 0 50px;
+}
+.lightbox-arrow {
+  color: #901c1c;
+}
+.close-lightbox {
+  font-size: 4em;
+  color: #901c1c;
+  position: absolute;
+  right: 10%;
+}
+
+#nextButton,
+#prevButton,
+.close-lightbox {
+  background: none; /* Supprime le fond */
+  border: none; /* Supprime la bordure */
+  padding: 0; /* Supprime le padding */
+  cursor: pointer; /* Assure que le curseur devient un pointeur au survol */
+  outline: inherit; /* Utilise le contour hérité (utile pour l'accessibilité) */
 }
