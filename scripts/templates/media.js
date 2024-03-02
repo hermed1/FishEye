@@ -14,7 +14,7 @@ export function mediaTemplate(
     photographerFirstName = photographerFirstName.replace('-', '');
   }
 
-  function createMedia() {
+  function createMedia(index) {
     const mediaName = document.createElement('p');
     mediaName.textContent = title ?? 'titre inconnu';
     mediaName.classList.add('media-title');
@@ -59,10 +59,8 @@ export function mediaTemplate(
       const mediaVideo = document.createElement('video');
       mediaVideo.setAttribute('src', mediaPath);
       mediaVideo.setAttribute('alt', title);
-      // mediaVideo.setAttribute('controls', 'controls');
-      mediaVideo.addEventListener('click', (e) => {
-        openLightbox(mediaPath, title ?? 'titre inconnu');
-        console.log(e);
+      mediaVideo.addEventListener('click', () => {
+        openLightbox(mediaPath, title ?? 'titre inconnu', index);
       });
       mediaContainer.appendChild(mediaVideo);
     } else {
@@ -70,18 +68,12 @@ export function mediaTemplate(
       const mediaImage = document.createElement('img');
       mediaImage.setAttribute('src', mediaPath);
       mediaImage.setAttribute('alt', title);
-      mediaImage.addEventListener('click', (e) => {
-        openLightbox(mediaPath, title ?? 'titre inconnu');
-        console.log(e);
+      mediaImage.addEventListener('click', () => {
+        openLightbox(mediaPath, title ?? 'titre inconnu', index);
       });
       mediaContainer.appendChild(mediaImage);
     }
-
     mediaContainer.appendChild(nameAndLikesContainer);
-    mediaContainer.setAttribute('mediaIndex', 1);
-    // mediaContainer.addEventListener('click', () => {
-    //   openLightbox(mediaPath, title ?? 'titre inconnu');
-    // });
     return mediaContainer;
   }
   return {

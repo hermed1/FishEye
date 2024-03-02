@@ -10,6 +10,7 @@ let displayedMedias;
 let photographer;
 let isDropdownOpen = false;
 let totalLikes = 0;
+let currentLightboxIndex;
 
 const buttonsList = [
   { id: 1, label: 'Popularité', sortingFunction: sortByPopularity },
@@ -85,7 +86,8 @@ async function createMedias(photographer) {
 
   const photographerName = photographer.name;
 
-  for (let oneMedia of displayedMedias) {
+  for (let i = 0; i < displayedMedias.length; i++) {
+    let oneMedia = displayedMedias[i];
     const mediaModel = mediaTemplate(
       oneMedia,
       photographerName,
@@ -93,7 +95,7 @@ async function createMedias(photographer) {
       changeMediaNumberOfLikes,
       openLightbox
     );
-    const mediaCard = mediaModel.createMedia();
+    const mediaCard = mediaModel.createMedia(i); // Passer l'index i ici
     mediasContainer.appendChild(mediaCard);
   }
 }
@@ -279,7 +281,8 @@ function updateTotalLikes(isMore = true) {
   }
 }
 
-function openLightbox(mediaPath, imgTitle) {
+function openLightbox(mediaPath, imgTitle, index) {
+  currentLightboxIndex = index;
   const lightbox = document.getElementById('lightbox_modal');
   lightbox.style.display = 'block';
   const mainContainer = document.querySelector('.main-container');
@@ -289,7 +292,6 @@ function openLightbox(mediaPath, imgTitle) {
   );
   lightboxMediaContainer.innerHTML = '';
   if (mediaPath.includes('mp4')) {
-    console.log('bebou', mediaPath);
     const lightboxVideo = document.createElement('video');
     lightboxVideo.classList.add('lightbox-img');
     lightboxVideo.setAttribute('src', mediaPath);
@@ -309,6 +311,8 @@ function openLightbox(mediaPath, imgTitle) {
     lightboxMediaContainer.appendChild(lightboxImg);
     lightboxMediaContainer.appendChild(lightboxImgTitle);
   }
+  handlePrevButton();
+  handleNextButton();
 }
 
 function closeLightbox() {
@@ -323,75 +327,92 @@ document
   .querySelector('.close-lightbox')
   .addEventListener('click', closeLightbox);
 
-document.querySelector('#prevButton').addEventListener('click', () => {
-  const currentImageSrc = document.querySelector('.lightbox-img').src;
-  const imgNameParts = currentImageSrc.split('/');
-  const imgName = imgNameParts[imgNameParts.length - 1];
+function handlePrevButton() {
+  document.querySelector('#prevButton').addEventListener('click', () => {
+    const lightboxMediaContainer = document.querySelector(
+      '.lightbox-media-container'
+    );
 
-  const currentImageIndex = displayedMedias.findIndex(
-    (media) => media.image === imgName || media.video === imgName
-  );
+    const currentImageSrc = document.querySelector('.lightbox-img').src;
+    const imgSourceArray = currentImageSrc.split('/');
+    lightboxMediaContainer.innerHTML = '';
 
-  const lightboxMediaContainer = document.querySelector(
-    '.lightbox-media-container'
-  );
-  lightboxMediaContainer.innerHTML = '';
-  const newLightboxImg = document.createElement('img');
-  let newImageIndex;
-  if (currentImageIndex - 1 < 0) {
-    newImageIndex = displayedMedias.length - 1;
-  } else {
-    newImageIndex = currentImageIndex - 1;
-  }
-  const newImageName =
-    displayedMedias[newImageIndex].image ||
-    displayedMedias[newImageIndex].video;
-  console.log('newSrc', newImageName);
-  imgNameParts[imgNameParts.length - 1] = newImageName;
-  const newFullSrc = imgNameParts.join('/');
-  newLightboxImg.src = newFullSrc;
-  newLightboxImg.classList.add('lightbox-img');
-  lightboxMediaContainer.appendChild(newLightboxImg);
+    let newImageIndex;
+    if (currentLightboxIndex - 1 < 0) {
+      newImageIndex = displayedMedias.length - 1;
+      currentLightboxIndex = newImageIndex;
+    } else {
+      newImageIndex = currentLightboxIndex - 1;
+      currentLightboxIndex = newImageIndex;
+    }
+    const newImageName =
+      displayedMedias[newImageIndex].image ||
+      displayedMedias[newImageIndex].video;
 
-  const lightboxImgTitle = document.createElement('p');
-  lightboxImgTitle.classList.add('lightboxImgTitle');
-  lightboxImgTitle.textContent = displayedMedias[newImageIndex].title;
-  lightboxMediaContainer.appendChild(lightboxImgTitle);
-});
+    imgSourceArray[imgSourceArray.length - 1] = newImageName;
+    let newSrc = imgSourceArray.join('/');
 
+    const newLightboxImg = newSrc.includes('mp4')
+      ? document.createElement('video')
+      : document.createElement('img');
+    newLightboxImg.setAttribute('src', newSrc);
+
+    if (newSrc.includes('mp4')) {
+      newLightboxImg.setAttribute('controls', '');
+    }
+
+    newLightboxImg.classList.add('lightbox-img');
+    lightboxMediaContainer.appendChild(newLightboxImg);
+
+    const lightboxImgTitle = document.createElement('p');
+    lightboxImgTitle.classList.add('lightboxImgTitle');
+    lightboxImgTitle.textContent = displayedMedias[newImageIndex].title;
+    lightboxMediaContainer.appendChild(lightboxImgTitle);
+  });
+}
 //gérer quand on arrive à index 0 ou index length -1
 //q
-document.querySelector('#nextButton').addEventListener('click', () => {
-  const currentImageSrc = document.querySelector('.lightbox-img').src;
-  const imgNameParts = currentImageSrc.split('/');
-  const imgName = imgNameParts[imgNameParts.length - 1];
 
-  const currentImageIndex = displayedMedias.findIndex(
-    (media) => media.image === imgName || media.video === imgName
-  );
+function handleNextButton() {
+  document.querySelector('#nextButton').addEventListener('click', () => {
+    const lightboxMediaContainer = document.querySelector(
+      '.lightbox-media-container'
+    );
 
-  const lightboxMediaContainer = document.querySelector(
-    '.lightbox-media-container'
-  );
-  lightboxMediaContainer.innerHTML = '';
-  const newLightboxImg = document.createElement('img');
-  let newImageIndex;
-  if (currentImageIndex + 1 > displayedMedias.length - 1) {
-    newImageIndex = 0;
-  } else {
-    newImageIndex = currentImageIndex + 1;
-  }
-  const newImageName =
-    displayedMedias[newImageIndex].image ||
-    displayedMedias[newImageIndex].video;
-  imgNameParts[imgNameParts.length - 1] = newImageName;
-  const newFullSrc = imgNameParts.join('/');
-  newLightboxImg.src = newFullSrc;
-  newLightboxImg.classList.add('lightbox-img');
-  lightboxMediaContainer.appendChild(newLightboxImg);
+    const currentImageSrc = document.querySelector('.lightbox-img').src;
+    const imgSourceArray = currentImageSrc.split('/');
+    lightboxMediaContainer.innerHTML = '';
 
-  const lightboxImgTitle = document.createElement('p');
-  lightboxImgTitle.classList.add('lightboxImgTitle');
-  lightboxImgTitle.textContent = displayedMedias[newImageIndex].title;
-  lightboxMediaContainer.appendChild(lightboxImgTitle);
-});
+    let newImageIndex;
+    if (currentLightboxIndex + 1 > displayedMedias.length - 1) {
+      newImageIndex = 0;
+      currentLightboxIndex = newImageIndex;
+    } else {
+      newImageIndex = currentLightboxIndex + 1;
+      currentLightboxIndex = newImageIndex;
+    }
+    const newImageName =
+      displayedMedias[newImageIndex].image ||
+      displayedMedias[newImageIndex].video;
+
+    imgSourceArray[imgSourceArray.length - 1] = newImageName;
+    let newSrc = imgSourceArray.join('/');
+
+    const newLightboxImg = newSrc.includes('mp4')
+      ? document.createElement('video')
+      : document.createElement('img');
+    newLightboxImg.setAttribute('src', newSrc);
+
+    if (newSrc.includes('mp4')) {
+      newLightboxImg.setAttribute('controls', '');
+    }
+
+    newLightboxImg.classList.add('lightbox-img');
+    lightboxMediaContainer.appendChild(newLightboxImg);
+
+    const lightboxImgTitle = document.createElement('p');
+    lightboxImgTitle.classList.add('lightboxImgTitle');
+    lightboxImgTitle.textContent = displayedMedias[newImageIndex].title;
+    lightboxMediaContainer.appendChild(lightboxImgTitle);
+  });
+}

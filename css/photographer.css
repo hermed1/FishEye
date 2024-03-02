@@ -277,6 +277,12 @@ main img {
 .lightbox-arrow {
   color: #901c1c;
 }
+.lightboxImgTitle {
+  margin-top: 15px;
+  color: #901c1c;
+  font-weight: bold;
+}
+
 .close-lightbox {
   font-size: 4em;
   color: #901c1c;
