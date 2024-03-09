@@ -93,6 +93,7 @@ async function createMedias(photographer) {
       photographerName,
       updateTotalLikes,
       changeMediaNumberOfLikes,
+      handleLikes,
       openLightbox
     );
     const mediaCard = mediaModel.createMedia(i); // Passer l'index i ici
@@ -250,6 +251,20 @@ function getFormValues() {
   console.log('form', formDetails);
 }
 
+function handleLikes(event) {
+  if (event.target.classList.contains('fa-regular')) {
+    event.target.classList.remove('fa-regular');
+    event.target.classList.add('fa-solid');
+    changeMediaNumberOfLikes(true, event.target);
+    updateTotalLikes();
+  } else {
+    event.target.classList.add('fa-regular');
+    event.target.classList.remove('fa-solid');
+    changeMediaNumberOfLikes(false, event.target);
+    updateTotalLikes(false);
+  }
+}
+
 function changeMediaNumberOfLikes(isMore = true, target) {
   if (isMore) {
     let heart = target;
@@ -313,6 +328,7 @@ function openLightbox(mediaPath, imgTitle, index) {
   }
   handlePrevButton();
   handleNextButton();
+  handleKeyboardEvents();
 }
 
 function closeLightbox() {
@@ -321,6 +337,8 @@ function closeLightbox() {
   const mainContainer = document.querySelector('.main-container');
   // Réafficher mainContainer lorsque la lightbox est fermée
   mainContainer.style.display = '';
+  //repasser dessus
+  document.removeEventListener('keydown', handleKeyboardEvents);
 }
 
 document
@@ -328,91 +346,124 @@ document
   .addEventListener('click', closeLightbox);
 
 function handlePrevButton() {
-  document.querySelector('#prevButton').addEventListener('click', () => {
-    const lightboxMediaContainer = document.querySelector(
-      '.lightbox-media-container'
-    );
+  console.log(displayedMedias);
+  const lightboxMediaContainer = document.querySelector(
+    '.lightbox-media-container'
+  );
 
-    const currentImageSrc = document.querySelector('.lightbox-img').src;
-    const imgSourceArray = currentImageSrc.split('/');
-    lightboxMediaContainer.innerHTML = '';
+  const currentImageSrc = document.querySelector('.lightbox-img').src;
+  const imgSourceArray = currentImageSrc.split('/');
+  lightboxMediaContainer.innerHTML = '';
 
-    let newImageIndex;
-    if (currentLightboxIndex - 1 < 0) {
-      newImageIndex = displayedMedias.length - 1;
-      currentLightboxIndex = newImageIndex;
-    } else {
-      newImageIndex = currentLightboxIndex - 1;
-      currentLightboxIndex = newImageIndex;
-    }
-    const newImageName =
-      displayedMedias[newImageIndex].image ||
-      displayedMedias[newImageIndex].video;
+  let newImageIndex;
+  if (currentLightboxIndex - 1 < 0) {
+    newImageIndex = displayedMedias.length - 1;
+    currentLightboxIndex = newImageIndex;
+  } else {
+    newImageIndex = currentLightboxIndex - 1;
+    currentLightboxIndex = newImageIndex;
+  }
+  const newImageName =
+    displayedMedias[newImageIndex].image ||
+    displayedMedias[newImageIndex].video;
 
-    imgSourceArray[imgSourceArray.length - 1] = newImageName;
-    let newSrc = imgSourceArray.join('/');
+  imgSourceArray[imgSourceArray.length - 1] = newImageName;
+  let newSrc = imgSourceArray.join('/');
 
-    const newLightboxImg = newSrc.includes('mp4')
-      ? document.createElement('video')
-      : document.createElement('img');
-    newLightboxImg.setAttribute('src', newSrc);
+  const newLightboxImg = displayedMedias[newImageIndex].hasOwnProperty('video')
+    ? document.createElement('video')
+    : document.createElement('img');
+  newLightboxImg.setAttribute('src', newSrc);
 
-    if (newSrc.includes('mp4')) {
-      newLightboxImg.setAttribute('controls', '');
-    }
+  if (newSrc.includes('mp4')) {
+    newLightboxImg.setAttribute('controls', '');
+  }
 
-    newLightboxImg.classList.add('lightbox-img');
-    lightboxMediaContainer.appendChild(newLightboxImg);
+  newLightboxImg.classList.add('lightbox-img');
+  lightboxMediaContainer.appendChild(newLightboxImg);
 
-    const lightboxImgTitle = document.createElement('p');
-    lightboxImgTitle.classList.add('lightboxImgTitle');
-    lightboxImgTitle.textContent = displayedMedias[newImageIndex].title;
-    lightboxMediaContainer.appendChild(lightboxImgTitle);
-  });
+  const lightboxImgTitle = document.createElement('p');
+  lightboxImgTitle.classList.add('lightboxImgTitle');
+  lightboxImgTitle.textContent = displayedMedias[newImageIndex].title;
+  lightboxMediaContainer.appendChild(lightboxImgTitle);
 }
-//gérer quand on arrive à index 0 ou index length -1
-//q
 
 function handleNextButton() {
-  document.querySelector('#nextButton').addEventListener('click', () => {
-    const lightboxMediaContainer = document.querySelector(
-      '.lightbox-media-container'
-    );
+  const lightboxMediaContainer = document.querySelector(
+    '.lightbox-media-container'
+  );
 
-    const currentImageSrc = document.querySelector('.lightbox-img').src;
-    const imgSourceArray = currentImageSrc.split('/');
-    lightboxMediaContainer.innerHTML = '';
+  const currentImageSrc = document.querySelector('.lightbox-img').src;
+  const imgSourceArray = currentImageSrc.split('/');
+  lightboxMediaContainer.innerHTML = '';
 
-    let newImageIndex;
-    if (currentLightboxIndex + 1 > displayedMedias.length - 1) {
-      newImageIndex = 0;
-      currentLightboxIndex = newImageIndex;
-    } else {
-      newImageIndex = currentLightboxIndex + 1;
-      currentLightboxIndex = newImageIndex;
+  let newImageIndex;
+  if (currentLightboxIndex + 1 > displayedMedias.length - 1) {
+    newImageIndex = 0;
+    currentLightboxIndex = newImageIndex;
+  } else {
+    newImageIndex = currentLightboxIndex + 1;
+    currentLightboxIndex = newImageIndex;
+  }
+  const newImageName =
+    displayedMedias[newImageIndex].image ||
+    displayedMedias[newImageIndex].video;
+
+  imgSourceArray[imgSourceArray.length - 1] = newImageName;
+  let newSrc = imgSourceArray.join('/');
+
+  const newLightboxImg = newSrc.includes('mp4')
+    ? document.createElement('video')
+    : document.createElement('img');
+  newLightboxImg.setAttribute('src', newSrc);
+
+  if (newSrc.includes('mp4')) {
+    newLightboxImg.setAttribute('controls', '');
+  }
+
+  newLightboxImg.classList.add('lightbox-img');
+  lightboxMediaContainer.appendChild(newLightboxImg);
+
+  const lightboxImgTitle = document.createElement('p');
+  lightboxImgTitle.classList.add('lightboxImgTitle');
+  lightboxImgTitle.textContent = displayedMedias[newImageIndex].title;
+  lightboxMediaContainer.appendChild(lightboxImgTitle);
+}
+
+function handleKeyboardEvents() {
+  document.addEventListener('keydown', (event) => {
+    switch (event.key) {
+      case 'ArrowRight':
+        handleNextButton();
+        break;
+      case 'ArrowLeft':
+        handlePrevButton();
+        break;
+      case 'Escape':
+        closeLightbox();
+        break;
+      default:
+        break;
     }
-    const newImageName =
-      displayedMedias[newImageIndex].image ||
-      displayedMedias[newImageIndex].video;
-
-    imgSourceArray[imgSourceArray.length - 1] = newImageName;
-    let newSrc = imgSourceArray.join('/');
-
-    const newLightboxImg = newSrc.includes('mp4')
-      ? document.createElement('video')
-      : document.createElement('img');
-    newLightboxImg.setAttribute('src', newSrc);
-
-    if (newSrc.includes('mp4')) {
-      newLightboxImg.setAttribute('controls', '');
-    }
-
-    newLightboxImg.classList.add('lightbox-img');
-    lightboxMediaContainer.appendChild(newLightboxImg);
-
-    const lightboxImgTitle = document.createElement('p');
-    lightboxImgTitle.classList.add('lightboxImgTitle');
-    lightboxImgTitle.textContent = displayedMedias[newImageIndex].title;
-    lightboxMediaContainer.appendChild(lightboxImgTitle);
   });
 }
+
+document
+  .querySelector('#prevButton')
+  .addEventListener('click', handlePrevButton);
+
+document
+  .querySelector('#nextButton')
+  .addEventListener('click', handleNextButton);
+
+//meme chose fleche gauche puis refacto dans 2 fonctions à appeler au click et au keydown
+
+// document.addEventListener('keydown', (event) => {
+//   if (event.key === 'ArrowRight') {
+//     document.querySelector('#nextButton').click();
+//   } else if (event.key === 'ArrowLeft') {
+//     document.querySelector('#prevButton').click();
+//   } else if (event.key === 'Escape') {
+//     closeLightbox();
+//   }
+// });
