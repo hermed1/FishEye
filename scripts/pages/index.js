@@ -2,7 +2,7 @@ import { photographerTemplate } from '../templates/photographer.js';
 
 export async function getPhotographers() {
 	try {
-		const response = await fetch('/data/photographers.json');
+		const response = await fetch('data/photographers.json');
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
