@@ -1,80 +1,95 @@
+// Importation des modules nécessaires.
 import { getPhotographers } from './index.js';
 import { photographerTemplate } from '../templates/photographer.js';
 import { mediaTemplate } from '../templates/media.js';
 
+// Récupération de l'ID du photographe depuis l'URL de la page.
 const url = new URL(document.location);
 const params = url.searchParams;
 const id = params.get('id');
 
+// Déclaration des variables pour stocker les médias affichés, les informations du photographe, etc.
 let displayedMedias;
 let photographer;
 let isDropdownOpen = false;
 let totalLikes = 0;
 let currentLightboxIndex;
 
+// Configuration des boutons pour le tri des médias.
 const buttonsList = [
 	{ id: 1, label: 'Popularité', sortingFunction: sortByPopularity },
 	{ id: 2, label: 'Titre', sortingFunction: sortByTitle },
 	{ id: 3, label: 'Date', sortingFunction: sortByDate },
 ];
 
+// Fonction pour générer et afficher les boutons du menu déroulant de tri.
 function generateDropdownButtons() {
 	const dropdownButtons = document.querySelector('.dropdown-buttons');
-	// Vider le conteneur avant d'ajouter de nouveaux boutons
+	// Efface le contenu actuel du conteneur de boutons.
 	dropdownButtons.innerHTML = '';
 
 	if (!isDropdownOpen) {
-		// Affiche uniquement le premier bouton si le menu est fermé
+		// Si le menu déroulant est fermé, affiche seulement le premier bouton.
 		const element = buttonsList[0];
 		const button = document.createElement('button');
 		button.textContent = element.label;
-		button.classList.add('dropdown-button', 'dropdown-button1'); // Classe spécifique pour le premier bouton
+		button.classList.add('dropdown-button', 'dropdown-button1'); // Style spécifique pour le premier bouton.
 		dropdownButtons.appendChild(button);
 		button.addEventListener('click', (event) => {
-			event.stopPropagation(); // Empêche l'événement de clic de se propager
-			// Ouvre le menu et regénère les boutons
+			event.stopPropagation(); // Empêche la propagation de l'événement pour éviter des comportements inattendus.
+			// Ouvre le menu déroulant et regénère les boutons.
 			isDropdownOpen = true;
 			generateDropdownButtons();
 			toggleDropdownArrows();
 		});
 	} else {
-		// Affiche tous les boutons si le menu est ouvert
+		// Si le menu est ouvert, affiche tous les boutons de tri.
 		buttonsList.forEach((element, index) => {
 			const dropdownButton = document.createElement('button');
 			dropdownButton.textContent = element.label;
 			dropdownButton.classList.add('dropdown-button');
-			// Si c'est le dernier élément du tableau, ajoute une classe spécifique
+			// Ajoute une classe spécifique au dernier élément pour éventuellement ajuster son style.
 			if (index === buttonsList.length - 1) {
 				dropdownButton.classList.add('last-dropdown-button');
 			}
 			dropdownButtons.appendChild(dropdownButton);
 
 			dropdownButton.addEventListener('click', () => {
-				element.sortingFunction();
-				// Déplace l'élément cliqué en première position du tableau
-				buttonsList.unshift(
-					buttonsList.splice(buttonsList.indexOf(element), 1)[0]
-				);
-				isDropdownOpen = false; // Ferme le menu après sélection
-				generateDropdownButtons();
-				toggleDropdownArrows();
+				element.sortingFunction(); // Applique la fonction de tri associée au bouton.
+				// Réorganise les éléments de la liste pour placer l'élément sélectionné en premier.
+				//splice retire l'élément à son index trouvé et renvoie un tableau => récupération du 1er élément et on le pousse en 1ère position de buttonsList
+				buttonsList.unshift(buttonsList.splice(buttonsList.indexOf(element), 1)[0]);
+				isDropdownOpen = false; // Ferme le menu après la sélection.
+				generateDropdownButtons(); // Regénère les boutons pour refléter le nouvel ordre.
+				toggleDropdownArrows(); // Met à jour les flèches indiquant l'état du menu déroulant.
 			});
 		});
-		toggleDropdownArrows();
+		toggleDropdownArrows(); // Met à jour les flèches dès que le menu change d'état.
 	}
 }
 
+
+// Écouteur d'événements pour gérer les clics à l'extérieur du menu déroulant.
 document.addEventListener('click', (event) => {
+	// Sélectionne l'élément dropdown.
 	const dropdown = document.querySelector('.dropdown');
+	// Vérifie si le clic a été effectué à l'intérieur du dropdown.
 	const isDropdownClicked = dropdown.contains(event.target);
+	// Si le clic a été effectué en dehors du dropdown, exécute la logique suivante.
 	if (!isDropdownClicked) {
+		// Régénère les boutons du dropdown pour refléter l'état initial.
 		generateDropdownButtons();
+		// Met à jour les flèches du dropdown pour indiquer qu'il est fermé.
 		toggleDropdownArrows();
+		// Réinitialise l'état du dropdown à fermé.
 		isDropdownOpen = false;
 	}
 });
 
+
+// Fonction asynchrone pour créer et afficher les médias d'un photographe spécifique.
 async function createMedias(photographer) {
+	// Sélectionne le conteneur pour les médias; le crée s'il n'existe pas déjà.
 	let mediasContainer = document.querySelector('.medias-container');
 	if (!mediasContainer) {
 		mediasContainer = document.createElement('div');
@@ -82,24 +97,28 @@ async function createMedias(photographer) {
 		document.querySelector('#main').appendChild(mediasContainer);
 	}
 
+	// Efface les médias précédemment affichés dans le conteneur.
 	mediasContainer.innerHTML = '';
 
+	// Récupère le nom du photographe pour le traitement ultérieur.
 	const photographerName = photographer.name;
 
+	// Boucle sur chaque média associé au photographe pour le créer et l'afficher.
 	for (let i = 0; i < displayedMedias.length; i++) {
 		let oneMedia = displayedMedias[i];
+		// Crée le modèle de média en utilisant le template spécifié.
 		const mediaModel = mediaTemplate(
 			oneMedia,
 			photographerName,
-			updateTotalLikes,
-			changeMediaNumberOfLikes,
 			handleLikes,
 			openLightbox
 		);
-		const mediaCard = mediaModel.createMedia(i); // Passer l'index i ici
+			// Crée l'élément DOM pour le média et l'ajoute au conteneur.
+		const mediaCard = mediaModel.createMedia(i); 
 		mediasContainer.appendChild(mediaCard);
 	}
 }
+
 
 async function getPhotographer() {
 	try {
@@ -155,29 +174,6 @@ async function initPhotographerPage() {
 		createMedias(photographer);
 	}
 
-	//   const likesNumber = document.createElement('p');
-	//   const heart = document.createElement('i');
-	//   heart.classList.add('fa-solid');
-	//   heart.classList.add('fa-heart');
-	//   likesNumber.textContent = totalLikes + heart;
-	//   const priceAndTotalLikes = document.createElement('div');
-	//   const price = document.createElement('p');
-	//   price.textContent = `${photographer.price}€ / jour`;
-	//   priceAndTotalLikes.classList.add('price-and-total-likes');
-	//   priceAndTotalLikes.appendChild(likesNumber);
-	//   priceAndTotalLikes.appendChild(price);
-	//   const mainContainer = document.getElementsByTagName('mainContainer');
-	//   mainContainer[0].appendChild(priceAndTotalLikes);
-	// }
-
-	// if (photographer?.price) {
-	//   let totalLikes = 0;
-	//   if (displayedMedias) {
-	//     for (let oneMedia of displayedMedias) {
-	//       totalLikes += oneMedia.likes;
-	//     }
-	//   }
-
 	generateDropdownButtons();
 }
 
@@ -214,7 +210,6 @@ function toggleDropdownArrows() {
 		arrowDown.classList.remove('displayed-arrow');
 	}
 }
-
 
 function closeModal() {
 	const contactModal = document.querySelector('#contact_modal');

@@ -15,18 +15,16 @@ export function photographerTemplate(
 				'photographer-header-container'
 			);
 			const contactButton = document.querySelector('.contact_button');
-			// const article = document.createElement('article');
 			const img = document.createElement('img');
 			img.setAttribute('src', picture);
 			img.setAttribute('alt', `Portrait de ${name}`);
-			const titleTagElement = document.createElement(titleTag); // Utilise le paramètre titleTag
+			const titleTagElement = document.createElement(titleTag); 
 			titleTagElement.textContent = name ?? 'nom inconnu';
 			titleTagElement.classList.add('photographer__name');
 			const cityP = document.createElement('p');
 			cityP.classList.add('city');
 			cityP.textContent = city ? city + ',' : 'ville inconnue';
 			const countryP = document.createElement('p');
-			// countryP.textContent = country ?? 'pays inconnu'; // si chaîne de caractères vide => string vide
 			countryP.textContent = country || 'pays inconnu'; // => si falsy Une valeur "falsy" inclut false, 0, '' (chaîne vide), null, undefined, et NaN;
 			const locationContainer = document.createElement('div');
 			locationContainer.classList.add('location__container');
@@ -36,7 +34,6 @@ export function photographerTemplate(
 			const priceP = document.createElement('p');
 			priceP.textContent = price ? `${price}€ par jour` : 'prix non spécifié';
 			priceP.classList.add('photographer__price');
-			// const cardLink = document.createElement('a');
 			const infosContainer = document.createElement('div');
 			infosContainer.classList.add('infos-container');
 			//gestion du total des likes
@@ -52,7 +49,6 @@ export function photographerTemplate(
 			);
 			likesNumber.textContent = totalLikes ?? '';
 			likesNumber.classList.add('number-of-likes');
-			// likesNumber.appendChild(heart);
 			likesAndHeart.appendChild(likesNumber);
 			likesAndHeart.appendChild(heart);
 
@@ -65,7 +61,6 @@ export function photographerTemplate(
 			infosContainer.appendChild(quote);
 			photographerHeaderContainer.appendChild(infosContainer);
 			photographerHeaderContainer.appendChild(contactButton);
-			// photographHeader.appendChild(priceP);
 			photographerHeaderContainer.appendChild(img);
 			return photographerHeaderContainer;
 		} else {
@@ -80,8 +75,7 @@ export function photographerTemplate(
 			cityP.classList.add('city');
 			cityP.textContent = city ? city + ',' : 'ville inconnue';
 			const countryP = document.createElement('p');
-			// countryP.textContent = country ?? 'pays inconnu'; // si chaîne de caractères vide => string vide
-			countryP.textContent = country || 'pays inconnu'; // => si falsy Une valeur "falsy" inclut false, 0, '' (chaîne vide), null, undefined, et NaN;
+			countryP.textContent = country || 'pays inconnu'; 
 			const locationContainer = document.createElement('div');
 			locationContainer.classList.add('location__container');
 			const quote = document.createElement('p');
@@ -112,7 +106,6 @@ export function photographerTemplate(
 		tagline,
 		price,
 		country,
-		tagline,
 		id,
 		getUserCardDOM,
 	};
