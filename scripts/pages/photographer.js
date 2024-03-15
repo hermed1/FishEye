@@ -69,23 +69,33 @@ function generateDropdownButtons() {
 }
 
 
-// Écouteur d'événements pour gérer les clics à l'extérieur du menu déroulant.
 document.addEventListener('click', (event) => {
-	// Sélectionne l'élément dropdown.
 	const dropdown = document.querySelector('.dropdown');
-	// Vérifie si le clic a été effectué à l'intérieur du dropdown.
 	const isDropdownClicked = dropdown.contains(event.target);
-	// Si le clic a été effectué en dehors du dropdown, exécute la logique suivante.
-	if (!isDropdownClicked) {
-		// Régénère les boutons du dropdown pour refléter l'état initial.
-		generateDropdownButtons();
-		// Met à jour les flèches du dropdown pour indiquer qu'il est fermé.
-		toggleDropdownArrows();
-		// Réinitialise l'état du dropdown à fermé.
-		isDropdownOpen = false;
+
+	// On vérifie d'abord si le dropdown est ouvert
+	if (isDropdownOpen) {
+		// Si le clic a été effectué en dehors du dropdown et que le dropdown est ouvert,
+		// on ferme le dropdown.
+		if (!isDropdownClicked) {
+			toggleDropdown(); // Supposons que cette fonction gère à la fois l'ouverture et la fermeture du dropdown
+		}
 	}
 });
 
+function toggleDropdown() {
+	// Cette fonction devrait gérer le changement d'état du dropdown
+	isDropdownOpen = !isDropdownOpen; // Bascule l'état d'ouverture
+	if (isDropdownOpen) {
+		// Logique pour ouvrir le dropdown
+		generateDropdownButtons();
+		toggleDropdownArrows(true); // On suppose que cette fonction peut prendre un paramètre pour indiquer l'état
+	} else {
+		// Logique pour fermer le dropdown
+		generateDropdownButtons(); // Assurez-vous que cette fonction gère correctement l'état de fermeture
+		toggleDropdownArrows(false); // Ferme visuellement le dropdown
+	}
+}
 
 // Fonction asynchrone pour créer et afficher les médias d'un photographe spécifique.
 async function createMedias(photographer) {

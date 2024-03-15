@@ -17,5 +17,7 @@ function displayModal() {
 function closeModal() {
 	const modal = document.getElementById('contact_modal');
 	modal.style.display = 'none';
+	document.querySelector('#contact_modal form').reset();
+
 }
 

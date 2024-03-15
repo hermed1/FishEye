@@ -299,3 +299,7 @@ main img {
   cursor: pointer; /* Assure que le curseur devient un pointeur au survol */
   outline: inherit; /* Utilise le contour hérité (utile pour l'accessibilité) */
 }
+
+.main-container{
+  padding-bottom: 50px;
+}
