@@ -238,7 +238,9 @@ function toggleDropdownArrows() {
 
 function closeModal() {
 	const contactModal = document.querySelector('#contact_modal');
+	document.querySelector('#contact_modal form').reset();
 	contactModal.style.display = 'none';
+	
 }
 
 function getFormValues() {
