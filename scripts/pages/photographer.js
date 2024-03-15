@@ -416,16 +416,7 @@ function handlePrevButton() {
 	imgSourceArray[imgSourceArray.length - 1] = newImageName; // Remplace le nom du fichier dans le chemin
 	let newSrc = imgSourceArray.join('/'); // Recombine les segments en un chemin complet
 
-	// // Crée un nouvel élément HTML (img ou video) selon le type de média
-	// const newLightboxImg = displayedMedias[newImageIndex].hasOwnProperty('video')
-	// 	? document.createElement('video')
-	// 	: document.createElement('img');
-	// newLightboxImg.setAttribute('src', newSrc); // Définit le chemin du nouveau média
-
-	// // Si c'est une vidéo, ajoute les contrôles de lecture
-	// if (displayedMedias[newImageIndex].hasOwnProperty('video')) {
-	// 	newLightboxImg.setAttribute('controls', '');
-	// }
+	
 	const hasVideoProperty = Object.prototype.hasOwnProperty.call(displayedMedias[newImageIndex], 'video');
 	const newLightboxImg = hasVideoProperty
 		? document.createElement('video')
@@ -472,16 +463,7 @@ function handleNextButton() {
 	imgSourceArray[imgSourceArray.length - 1] = newImageName;
 	let newSrc = imgSourceArray.join('/');
 
-	// // Crée l'élément HTML approprié pour le type de média (image ou vidéo)
-	// const newLightboxImg = displayedMedias[newImageIndex].hasOwnProperty('video')
-	// 	? document.createElement('video')
-	// 	: document.createElement('img');
-	// newLightboxImg.setAttribute('src', newSrc);
 
-	// // Ajoute les contrôles de lecture pour les vidéos
-	// if (displayedMedias[newImageIndex].hasOwnProperty('video')) {
-	// 	newLightboxImg.setAttribute('controls', '');
-	// }
 	const hasVideoProperty = Object.prototype.hasOwnProperty.call(displayedMedias[newImageIndex], 'video');
 	const newLightboxImg = hasVideoProperty
 		? document.createElement('video')
