@@ -35,15 +35,17 @@
           <div class="dropdown-buttons"></div>
         </div>
       </main>
-      <div id="contact_modal" role="dialog">
+      <div id="contact_modal" role="dialog" aria-labelledby="contactModalTitle" aria-modal="true">
         <div class="modal">
           <header>
-            <h2>Contactez-moi</h2>
-            <img
-              src="assets/icons/close.svg"
-              alt="Fermer la modale"
-              onclick="closeModal()"
-            />
+            <h2 id="contactModalTitle">Contactez-moi</h2>
+            <button id="closeContactModal" aria-label="Fermer la modale" onclick="closeModal()" tabindex="0">
+              <img
+                src="assets/icons/close.svg"
+                alt="Fermer la modale"
+                onclick="closeModal()"
+              />
+            </button>
           </header>
           <form>
             <div>

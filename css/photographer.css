@@ -292,7 +292,7 @@ main img {
 
 #nextButton,
 #prevButton,
-.close-lightbox {
+.close-lightbox, #closeContactModal {
   background: none; /* Supprime le fond */
   border: none; /* Supprime la bordure */
   padding: 0; /* Supprime le padding */
